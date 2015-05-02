@@ -33,8 +33,6 @@
 		
 		function recibirEstadoANDMunicipio(){
 			
-			echo "<script>alert(".$_REQUEST['mun'].")</script>";
-			
 			if ($_REQUEST['est'] != "" && $_REQUEST['mun'] != "") {
 				$obtenerDatosEstaMunci = array(
 					'IDstate' => $_REQUEST['est'],

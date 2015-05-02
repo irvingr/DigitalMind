@@ -25,7 +25,7 @@
 							<input type="hidden" name="txtLoc" value="<?php echo $Dir['localidad'] ?>"/>
 							<input type="hidden" name="txtCp" value="<?php echo $Dir['codigoP'] ?>"/>
 							<!-- Botón -->
-							<input type="button" name="btnAdd" class="addLoc" value="Agregar" onClick="$.fancybox.close();">
+							<input type="button" name="btnAdd" class="addLoc" value="Agregar" onClick="int.fancybox.close();">
 							</form>
 						</td>
 					</tr>
@@ -36,12 +36,13 @@
 <?php endif ?>
 
 <script type="text/javascript">
-	$(function () {
-		$('.addLoc').click(
+	var dir = jQuery.noConflict();
+	dir(function () {
+		dir('.addLoc').click(
 			function () {
 				formLoc = this.form;
-				$('#datosLoc').load('index.php?url=enviarLocality&',$(formLoc).serialize());
-				$("#datosLoc").css("display", "block");
+				dir('#datosLoc').load('index.php?url=enviarLocality&',dir(formLoc).serialize());
+				dir("#datosLoc").css("display", "block");
 			}
 		);
 	});

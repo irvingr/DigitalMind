@@ -200,67 +200,67 @@
 	
 	
 	<script type="text/javascript">
-		
+		var int = jQuery.noConflict();
 		<!--Script listas desplegables-->
-		$(document).ready(function(){
-		   $("dd").hide();
-			$("dt").css({
+		int(document).ready(function(){
+		   int("dd").hide();
+			int("dt").css({
 			'cursor':'pointer'});
-			$("dt").click(function(event){
-				var desplegable = $(this).next();
-				$('dd').not(desplegable).slideUp('fast');
+			int("dt").click(function(event){
+				var desplegable = int(this).next();
+				int('dd').not(desplegable).slideUp('fast');
 				desplegable.slideToggle('fast');
 				event.preventDefault();
-				$("#nomCont").focus();
+				int("#nomCont").focus();
 			})
 		});
 		
-		$(function () {
-		    $('#state').change(function () {
-		        if ($(this).val() != "") {
-		            $('#municipio').removeAttr('disabled');
-		            $('#municipio').load('index.php?url=viewMunicipality&state=' + this.options[this.selectedIndex].value);
-		            if($('#municipio').val("")){
-		        		$("#btnLoc").attr('disabled','disabled');
+		// $(document).ready(function() {
+		    // $('.keysNumbers').keypress(function(tecla) {
+		       // if(tecla.charCode < 48 || tecla.charCode > 57) return false;
+		   // });
+		// });
+// 		
+		// function conMayusculas(field) {
+			// field.value = field.value.toUpperCase()
+		// }
+		
+		int(function () {
+		    int('#state').change(function () {
+		        if (int(this).val() != "") {
+		            int('#municipio').removeAttr('disabled');
+		            int('#municipio').load('index.php?url=viewMunicipality&state=' + this.options[this.selectedIndex].value);
+		            if(int('#municipio').val("")){
+		        		int("#btnLoc").attr('disabled','disabled');
 		       		}
 		        }else {
-		            $('#municipio').attr('disabled','disabled').val("");
-		            $("#btnLoc").attr('disabled','disabled');
+		            int('#municipio').attr('disabled','disabled').val("");
+		            int("#btnLoc").attr('disabled','disabled');
 		        }
-		        $("#datosLoc").css("display", "none");
+		        // $("#datosLoc").css("display", "none");
 		    });
 		});
 		
 		function ValidarMunicipio() {
-		    if ($('#municipio').val() != "") {
-		    	$("#btnLoc").removeAttr('disabled');
-		        $("#icp").val("");
-		        $("#locEvent").val("");
+		    if (int('#municipio').val() != "") {
+		    	int("#btnLoc").removeAttr('disabled');
+		        // $("#icp").val("");
+		        // $("#locEvent").val("");
 		    }
 		    else {
-		        $('#municipio').removeAttr('disabled');
-		        $("#datosLoc").css("display", "none");
-		        $("#btnLoc").attr('disabled','disabled');
+		        int('#municipio').removeAttr('disabled');
+		        int("#datosLoc").css("display", "none");
+		        int("#btnLoc").attr('disabled','disabled');
 		    }
 		   
 		}
 		
-		jQuery(document).ready(function() {
-		    jQuery('.keysNumbers').keypress(function(tecla) {
-		        if(tecla.charCode < 48 || tecla.charCode > 57) return false;
-		    });
-		});
-		
-		function conMayusculas(field) {
-			field.value = field.value.toUpperCase()
-		}
-		
-		$(document).ready(function(){
-			$("#btnLoc").click(function () {
-				var estad = $("#state").val();
-				var municipi = $("#municipio").val();
-				$("#segundaPantallaLocalidad").fancybox();
-				$("#loc").load('index.php?url=enviarEstadMunici&est='+estad+'&mun='+municipi);
+		int(document).ready(function(){
+			int("#btnLoc").click(function () {
+				var estad = int("#state").val();
+				var municipi = int("#municipio").val();
+				int("#segundaPantallaLocalidad").fancybox();
+				int("#loc").load('index.php?url=enviarEstadMunici&est='+estad+'&mun='+municipi);
 			});
 		});
 		

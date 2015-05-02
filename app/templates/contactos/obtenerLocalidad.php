@@ -14,19 +14,31 @@
 		</table>
 		<br />
 	</form>
-	
+	<!-- onkeyup="dirtxtView(this.form)" -->
 	<div id="result"></div>
 </center>
 
-<script type="text/javascript">	
-	$(function () {
-		$('#localidad').keyup(
+<script type="text/javascript">
+	var lo = jQuery.noConflict();
+	lo(function () {
+		lo('#localidad').keyup(
 			function () {
-				formLoc = this.form;
-				$('#result').load('index.php?url=viewDirLocality&',$(formLoc).serialize());
+				formLo = this.form;
+				lo('#result').load('index.php?url=viewDirLocality&',lo(formLo).serialize());
 				
 			}
 		);
 	});
+// 	
+	// function dirtxtView(form){
+		// if($('#localidad').val() != ""){
+			// $("#result").css("display", "block");
+			// $('#result').load('index.php?url=viewDirLocality&stado=<?php //echo $IDestado ?>&municip=<?php //echo $nomMunicipio ?>&localidad=' + $('#formLocality').serialize());	
+		// }else{
+			// $("#result").css("display", "none");
+		// }
+	// }
+	
+	
 </script>
 
