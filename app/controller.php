@@ -15,20 +15,6 @@
     	}
 		
 		//---------------------------------------------DIRECCIÓN-------------------------------------------
-		/*function obtenerDireccion()
-		{
-			if ($_REQUEST['postcode']!="") {
-				
-				$idCodPost = $_REQUEST['postcode'];
-				
-				$m = new model(config::$mvc_db_name, config::$mvc_db_user,
-							config::$mvc_db_pass, config::$mvc_db_hostname);
-							
-				$codPost = $m->obtenerCodigoP($idCodPost);			
-				$obtenerDatosDir = $codPost;
-			}
-			require __DIR__ . '/templates/contactos/verDireccion.php';
-		}*/
 		
 		function obtenerMunicipio()
 		{
@@ -45,12 +31,38 @@
 			require __DIR__ . '/templates/contactos/verMunicipio.php';
 		}
 		
+		function recibirEstadoANDMunicipio(){
+			
+			echo "<script>alert(".$_REQUEST['mun'].")</script>";
+			
+			if ($_REQUEST['est'] != "" && $_REQUEST['mun'] != "") {
+				$obtenerDatosEstaMunci = array(
+					'IDstate' => $_REQUEST['est'],
+					'nameMunicipality' => $_REQUEST['mun'],
+				);
+			}
+			
+			require __DIR__ . '/templates/contactos/obtenerLocalidad.php';
+		}
+		
+		function recibirLocalidad(){
+			if($_REQUEST['idcp_loc'] != "" && $_REQUEST['txtLoc'] != "" && $_REQUEST['txtCp'] != ""){
+				$parametrosInfoDir = array(
+					'idCP' => $_REQUEST['idcp_loc'],
+					'Locality' => $_REQUEST['txtLoc'],
+					'codP' => $_REQUEST['txtCp'],
+				);
+			}
+			
+			require __DIR__ . '/templates/contactos/infoExtraDir.php';
+		}
+		
 		function obtenerDireccionLocalidad()
 		{
-			if ($_REQUEST['idEstado'] !="" && $_REQUEST['municipio'] && $_REQUEST['localidad'] !="") {
+			if ($_REQUEST['stado'] !="" && $_REQUEST['municip'] && $_REQUEST['localidad'] !="") {
 					
-				$idState = $_REQUEST['idEstado']; 
-				$nameMunicipality = $_REQUEST['municipio'];
+				$idState = $_REQUEST['stado']; 
+				$nameMunicipality = $_REQUEST['municip'];
 				$nameLocality = $_REQUEST['localidad'];
 				
 				$m = new model(config::$mvc_db_name, config::$mvc_db_user,
@@ -65,7 +77,7 @@
 		//---------------------------------------------CONTACTOS-------------------------------------------
 		public function listarContacto()
 		{
-			// Realiza la conexión a la Base de datoss
+			// Realiza la conexión a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 			
@@ -79,7 +91,7 @@
 			// Manda a llamar el archivo mostrarContactos.php
 			require __DIR__ . '/templates/contactos/mostrarContactos.php';
 		}
-		// La funcion ver contacto muestra el detalle del contacto
+		// La función ver contacto muestra el detalle del contacto
 		public function verContacto(){
 			// Se valida que se reciba el id del contacto
 			if(!isset($_GET['idContact'])){
@@ -90,7 +102,7 @@
 			// Realiza la conexión a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			/*Dentro de la varible se manda a llamar la conexión a la BD para obtener
+			/*Dentro de la variable se manda a llamar la conexión a la BD para obtener
 			 * acceso a la función obtener contacto, la cual recibe como parámetro el id del contacto*/
 			$detalleContacto = $m->obtenerContacto($IdContacto);
 			
@@ -101,7 +113,7 @@
 		}
 		
 		public function insertarContacto(){
-			// Realiza la conexión a la Base de datos	
+			// Realiza la conexión a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 			//Se crea un array con los datos del contacto
@@ -138,6 +150,10 @@
 			);
 			
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				print_r($_POST);
+				if($_POST['telEmergencia'] == ""){
+					$_POST['telEmergencia'] = 0;
+				}
 				//Valida si el número interior esta vacío le asigna un 0 
 				if($_POST['numInt'] == ""){
 					$_POST['numInt'] = 0;
@@ -145,6 +161,12 @@
 				// Valida si no se recibe la variable le asigna un 0
 				if(!isset($_POST['idcp-locality'])){
 					$_POST['idcp-locality'] = 0;
+				}
+				if(!isset($_POST['loc'])){
+					$_POST['loc'] = "";
+				}
+				if(!isset($_POST['cp'])){
+					$_POST['cp'] = "";
 				}
 				// Valida si se ejecuta la función de registarContacto redirecciona a la lista de contactos
 				if($m->registrarContacto($_POST['idAddress'],$_POST['idcp-locality'],$_POST['street'],$_POST['numExt'],$_POST['numInt'],$_POST['colonia'],$_POST['reference'],
@@ -175,28 +197,22 @@
 						'nomEstado' => $m -> obtenerNombreEstado($_POST['idEstado']),
 						// Combobox Estados
 						'estados' => $m -> obtenerDatosEstadoInsert($_POST['idEstado']),
+						//
 						'nomMunicipio' => $_POST['municipio'],
 						// Combobox Municipios
 						'municipios' => $m -> obtenerDatosMunicipioInsert($_POST['idEstado'], $_POST['municipio']),
-						'nameLocality' => $_POST['localidad'],
-						//Table Localidades
-						'localidades' => $m -> obtener_direccion($_POST['idEstado'], $_POST['municipio'], $_POST['localidad']),
 						//
-						'idCP' => $_POST['idcp-locality'],
+						'idcp' => $_POST['idcp-locality'],
+						'nameLocality' => $_POST['loc'],
+						'codigoPos' => $_POST['cp'],
 						'calleD' => $_POST['street'],
 						'numExterior' => $_POST['numExt'],
 						'numInterior' => $_POST['numInt'],
 						'coloniaD' => $_POST['colonia'],
 						'referenciaD' => $_POST['reference'],
-						//Obtener direción según cp
-						//'cp' => $_POST['postcode'],
-						// 'codigoP' => $m -> obtenerDatosDireccionInsert($_POST['postcode'],$_POST['idcp-locality']),
-						// 'idCP' => $_POST['idcp-locality'], 
-						// 'localidadC' => $m -> obtieneNombreLocalidad($_POST['idcp-locality']), 
-						// 'municipio' => $_POST['municipality'],
-						// 'estado' => $_POST['state'],
 					);
 					
+					//Manda un mensaje si ocurre un error
 					$parametrosContactos['mensaje'] = 'Error al registrar contacto. Revise el formulario';
 				}
 			}
@@ -205,10 +221,10 @@
 		}
 
 		public function buscarContacto(){
-			
+			// Realiza la conexión a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-						
+			//Se crea un array para manda a llamar la función de busquedaContactos que recibe como parámetros los criterios de búsqueda
 			$obtenerDatosContactos = array(
 				'contactos' => $m->busquedaContactos($_REQUEST['nombreContacto'],$_REQUEST['municipioContacto'],$_REQUEST['coloniaContacto'],
 																				$_REQUEST['areaContacto'],$_REQUEST['telMovilContacto'],$_REQUEST['emailPerContacto']),
@@ -218,36 +234,46 @@
 		}
 		
 		public function modificarContacto(){
-			
+			// Valida si se recibe el id del contacto
 			if(!isset($_GET['idContact'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Obtiene el valor del id del contacto
 			$IdContacto = $_GET['idContact'];
-			
+			// Realiza la conexión a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 			
-			//Obtener datos de contacto
+			//Obtiene datos de contacto
 			$detalleContacto = $m->obtenerContacto($IdContacto);
 			
 			$obtenerDatosContacto = $detalleContacto;
-			
+			// var_dump($obtenerDatosContacto);
+			// Obtiene datos de la dirección fisica
 			$obtenerDatosDir = array(
 				'estados' => $m -> obtenerDatosEstadoUpdate($IdContacto),
 				'municipios' => $m -> obtenerDatosMunicipioUpdate($IdContacto),
 				'localidades' => $m -> obtener_direccion_update($IdContacto),
 			);
 			
+			echo "<br /><br /><br />";
+			// var_dump($obtenerDatosDir['localidades']);
+			
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				// print_r($_POST);
 				
+				if($_POST['telEmergencia'] == ""){
+					$_POST['telEmergencia'] = 0;
+				}
+
+				//Valida si el número interior está vacío le asigna un 0 
 				if($_POST['numInt'] == ""){
 					$_POST['numInt'] = 0;
 				}
+					// Valida si no se recibe la variable le asigna un 0
 				if(!isset($_POST['idcp-locality'])){
 					$_POST['idcp-locality'] = 0;
 				}
+					// Valida si se ejecuta la función de actualizarContacto redirecciona a la lista de contactos
 				if($m->actualizarContacto($_POST['idAddress'],$_POST['idcp-locality'],$_POST['street'],$_POST['numExt'],$_POST['numInt'],$_POST['colonia'],$_POST['reference'],
 					$_POST['idContact'],$_POST['nameContact'],$_POST['ApPContact'],$_POST['ApMContact'],$_POST['nameArea'],$_POST['telMovil'],$_POST['whatsappMovil'],
 					$_POST['extC'],$_POST['telOficina'],$_POST['telEmergencia'],$_POST['emailPersonal'],$_POST['emailInstitucional'],$_POST['redSocialF'],$_POST['redSocialT'],
@@ -290,35 +316,27 @@
 						'num_int' => $_POST['numInt'],
 						'colonia' => $_POST['colonia'],
 						'referencia' => $_POST['reference'],
-						// 'localidad' =>$m -> obtieneNombreLocalidad($_POST['idcp-locality']),
-						// 'municipio' => $_POST['state'],
-						// 'estado' => $_POST['municipality'], 
 					);
-					
-					// $obtenerDatosDir = array(
-						// 'codigoP' => $_POST['postcode'],
-						// 'codigoP' => $m -> obtenerDatosDireccionInsert($_POST['postcode'],$_POST['idcp-locality']),
-						// 'id_cp' => $_POST['idcp-locality'], 
-						// 'localidad' => $m -> obtieneNombreLocalidad($_POST['idcp-locality']), 
-					// );
-					
+					//Manda un mensaje si ocurre un error			
 					$parametrosContactos['mensaje'] = 'Error al actualizar contacto. Revise el formulario';
 				}
 			}
+			// Manda a llamar el archivo modificarContacto.php
 			require  __DIR__.'/templates/contactos/modificarContacto.php';
 		}
 
 		public function eliminarContacto(){
-				
+			// Valida si se recibe el id de contacto 
 			if(!isset($_GET['idContact'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Obtiene el id de contacto
 			$IdContacto = $_GET['idContact'];
-			
+			//Realiza la coneción a la Base de datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			
+			/*Se manda a llamar dentro de la variable $eliminarContacto la función 
+			 * de borrarContacto que recibe como parámetro el id de contacto*/
 			$eliminarContacto = $m-> borrarContacto($IdContacto);
 		}
 
@@ -1674,56 +1692,64 @@
 		
 		public function insertarTransaccion()
 		{
+			//Realiza la conexión a la Base de Datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-				
 			if(isset($_POST['sltTrans'])){
+				// Si se realiza una compra ...
+				//1 = compra
 				if($_POST['sltTrans'] == 1){
 						
 					if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-						
+						//Valida si se ejecuta la función registrarTransCompra
 						if($m -> registrarTransCompra($_POST['numCompra'],$_POST['idProveedor'])){
+							//Crea un array con los datos para realizar la compra
 							$parametrosCompra2 = array(
 								'noComprovanteC' => $_POST['numCompra'],
 								'datosCompra' => $m -> obtenerDatosCompra($_POST['numCompra']),
 								'productos' => $m -> obtieneProductosProveedores($_POST['idProveedor']),
 							);
 						}else{
+							// Si ocurre un error guarda los valores seleccionados
 							$parametrosCompra2 = array(
 								'noComprovanteC' => $_POST['numCompra'],
 								'datosCompra' => $m -> obtenerDatosCompra($_POST['numCompra']),
 								'productos' => $m -> obtieneProductosProveedores($_POST['idProveedor']),
 							);
-							
+							// Se obtiene los productos agregados anteriormente
 							$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($_REQUEST['numCompra']);
 							$obtenerDatosProdAddCompr= $datosProdAddCompr;
 						}	
 					}
-					
+					// Manda a llamar el archivo insertarTransCompra.php
 					require __DIR__ . '/templates/transacciones/insertarTransCompra.php';					
 				}
+				// Si se realiza una venta ...
 				// 2 = Venta
 				elseif($_POST['sltTrans'] == 2){
 					
 					if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+						//Valida si se ejecuta la función registrarTransVenta
 						if ($m -> registrarTransVenta($_POST['numVenta'],$_POST['idCliente'])) {
+							//Crea un array con los datos para realizar la venta
 							$parametrosVenta2 = array(
 								'noComprovanteV' => $_POST['numVenta'],
 								'datosVenta' => $m -> obtenerDatosVenta($_POST['numVenta']),
 								'proveedores' => $m -> obtieneProvCombo(),
 							);
 						}else {
+							// Si ocurre un error guarda los valores seleccionados
 							$parametrosVenta2 = array(
 								'noComprovanteV' => $_POST['numVenta'],
 								'datosVenta' => $m -> obtenerDatosVenta($_POST['numVenta']),
 								'proveedores' => $m -> obtieneProvCombo(),
 							);
-							
+							// Se obtiene los productos agregados anteriormente
 							$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($_REQUEST['numVenta']);
 							$obtenerDatosProdAddVent = $datosProdAddVent;
 						}
 					}
-					
+					// Manda a llamar el archivo insertarTransVenta.php
 					require __DIR__ . '/templates/transacciones/insertarTransVenta.php';
 				}
 			}else {
@@ -1734,177 +1760,201 @@
 		}
 		
 		public function verInformacionProducto(){
+			// Valida que se reciba el id de producto
 			if(!isset($_GET['IDproducto'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Se obtiene id de producto
 			$claveProducto = $_GET['IDproducto'];
-			
+			// Se realiza la conexión a la BDD
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 						
-			
+			// Se obtiene la información del productoo
 			$datosProducto = $m -> obtenerInformacionProducto($claveProducto);
 			$mandarDatosProducto = $datosProducto;
-			
+			// Manda a llamar al archivo de verDatosProducto.php
 			require __DIR__ . '/templates/transacciones/verDatosProducto.php';
 		}
 		
 		//COMPRAS
 		public function agregarProdCompra(){
+			//Realiza la conexión a la Base de Datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 			
 			if ($_REQUEST != "") {
+				// Valida si se ejecuta la función de registrarDetalleTransCompra
 				if($m -> registrarDetalleTransCompra($_REQUEST['txtNumCompr'],$_REQUEST['idProducto'],$_REQUEST['txtCantProd'])){
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($_REQUEST['txtNumCompr']);
 					$obtenerDatosProdAddCompr= $datosProdAddCompr;
 				}else{
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($_REQUEST['txtNumCompr']);
 					$obtenerDatosProdAddCompr= $datosProdAddCompr;
 				}
 			}
-			
+			//Manda a llamar al archivo de agregarProductoCompra.php
 			require __DIR__ . '/templates/transacciones/agregarProductoCompra.php';
 		}
 		
 		public function eliminarProdCompra(){
+			//Realiza la conexión a la Base de Datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 						
 			if ($_REQUEST != "") {
+				// Valida si se ejecuta la función de borrarProductosAgregadosCompra
 				if($m -> borrarProductosAgregadosCompra($_REQUEST['idDetTransCompr'],$_REQUEST['idProductoC'],$_REQUEST['cantProdC'])){
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($_REQUEST['folioCompra']);
 					$obtenerDatosProdAddCompr= $datosProdAddCompr;
 				}else{
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($_REQUEST['folioCompra']);
 					$obtenerDatosProdAddCompr= $datosProdAddCompr;
 				}
 			}
-			
+			//Manda a llamar al archivo de borrarProductoCompra.php
 			require __DIR__ . '/templates/transacciones/borrarProductoCompra.php';
 		}
 		
 		public function listarComprasTrans(){
+			//Realiza la conexión a la Base de Datos
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			
+			// Se crea un array para obtener los datos de las compras
 			$obtenerDatosListCompras = array(
 				'compras' => $m -> listarCompras(),
 			);
-			
+			//Manda a llamar al archivo de mostrarCompras.php
 			require __DIR__ . '/templates/transacciones/mostrarCompras.php';
 		}
 		
 		public function detalleCompraTrans(){
+			// Valida si se recibe el número de compra 
 			if(!isset($_GET['numCompr'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Valida si se recibe el id de proveedor			
 			if(!isset($_GET['idPro'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Se obtiene el número de compra recibidoo
 			$folioCompra = $_GET['numCompr'];
+			// Se obtiene el id de proveedor recibido
 			$IDproveedor = $_GET['idPro'];
-			
+			//Realiza la conexión a la BD
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			
+			// Se obtiene los productos de la compra seleccionada por medio de la función obtenerProductosAgregadosCompra
 			$datosProdAddCompr = $m -> obtenerProductosAgregadosCompra($folioCompra);
 			
 			$obtenerDatosProdAddCompr= $datosProdAddCompr;
-			
+			//Se obtienen los datos de la compra
 			$informacionCompra = array(
 				'noComprovanteC' => $folioCompra,
 				'datosCompra' => $m -> obtenerDatosCompra($folioCompra),
 				'productos' => $m -> obtieneProductosProveedores($IDproveedor),
 			);
-			
+			//Manda a llamar al archivo de verCompra.php
 			require __DIR__ . '/templates/transacciones/verCompra.php';
 		}
 		
 		// VENTAS
+		// Se obtiene los productos relacionados con los proveedores
 		function obtenerProductosProvee()
 		{
 			if ($_REQUEST['prove']!="") {
-				
+				// Se obtiene el id del proveedor
 				$nameProveedor= $_REQUEST['prove'];
-				
+				//Realiza la conexión a la BD
 				$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 							config::$mvc_db_pass, config::$mvc_db_hostname);
-							
+				//Se obtienen los productos de cada proveedor
 				$productos = $m->obtieneProductosProveedores($nameProveedor);			
 				$obtenerDatosProductos = $productos;
 			}
+			//Manda a llamar al archivo de verProductosProveedor.php
 			require __DIR__ . '/templates/transacciones/verProductosProveedor.php';
 		}
 		
 		public function agregarProdVenta(){
+			//Realiza la conexión a la BD
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 			
 			if ($_REQUEST != "") {
+				// Valida si se ejecuta la función de registrarDetalleTransVentas
 				if($m -> registrarDetalleTransVenta($_REQUEST['txtNumVenta'],$_REQUEST['idProducto'],$_REQUEST['txtCantProd'])){
+					//Se obtienen los datos de los productos agregados anteriormente
 					$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($_REQUEST['txtNumVenta']);
 					$obtenerDatosProdAddVent = $datosProdAddVent;
 				}else{
+					//Se obtienen los datos de los productos agregados anteriormente
 					$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($_REQUEST['txtNumVenta']);
 					$obtenerDatosProdAddVent = $datosProdAddVent;
 				}
 			}
-			
+			// Manda a llamar al archivo de agregarProductoVenta.php
 			require __DIR__ . '/templates/transacciones/agregarProductoVenta.php';
 		}
 		
 		public function eliminarProdVenta(){
+			// Realiza la conexión a la BDD
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
 						
 			if ($_REQUEST != "") {
+				// Valida si se ejecuta la función de borrarProductosAgregadosVenta
 				if($m -> borrarProductosAgregadosVenta($_REQUEST['idDetTransVent'],$_REQUEST['idProductoV'],$_REQUEST['cantProdV'])){
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($_REQUEST['folioVenta']);
 					$obtenerDatosProdAddVent = $datosProdAddVent;
 				}else{
+					//Se obtiene los datos de los productos agregados anteriormente
 					$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($_REQUEST['folioVenta']);
 					$obtenerDatosProdAddVent = $datosProdAddVent;
 				}
 			}
-			
+			// Manda a llamar al archivo de borrarProductoVenta.php
 			require __DIR__ . '/templates/transacciones/borrarProductoVenta.php';
 		}
 		
 		public function listarVentasTrans(){
+			// Realiza la conexión a la BD
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			
+			//Se obtiene los datos de las ventas
 			$obtenerDatosListVentas = array(
 				'ventas' => $m -> listarVentas(),
 			);
-			
+			// Manda a llamar al archivo de mostrarVentas.php
 			require __DIR__ . '/templates/transacciones/mostrarVentas.php';
 		}
 		
 		public function detalleVentaTrans(){
+			// Valida si se recibe el número de venta
 			if(!isset($_GET['numVent'])){
 				throw new Exception("Página no encontrada", 1);
 			}
-			
+			// Se obtiene el número de venta
 			$folioVenta = $_GET['numVent'];
-			
+			// Realiza la conexión a la BD			
 			$m = new model(config::$mvc_db_name, config::$mvc_db_user,
 						config::$mvc_db_pass, config::$mvc_db_hostname);
-			
+			// Se obtiene los productos de la venta seleccionada por medio de la función obtenerProductosAgregadosVenta
 			$datosProdAddVent = $m -> obtenerProductosAgregadosVenta($folioVenta);
 			
 			$obtenerDatosProdAddVent= $datosProdAddVent;
-			
+			//Se obtienen los datos de la venta
 			$informacionVenta = array(
 				'noComprovanteV' => $folioVenta,
 				'datosVenta' => $m -> obtenerDatosVenta($folioVenta),
 				'proveedores' => $m -> obtieneProvCombo(),
 			);
-			
+			// Manda a llamar al archivo de verVenta.php
 			require __DIR__ . '/templates/transacciones/verVenta.php';
 		}
 

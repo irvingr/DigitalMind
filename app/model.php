@@ -120,63 +120,6 @@
 			return $direccion;
 		}
 		
-		/*Funcion para cargar div de los datos del formulario Dirección según el CP ingresado y con el  parametro de calve de contacto */
-		/*public function obtenerDatosDireccionUpdate($idContact)
-		{
-			$consulta1 = "SELECT cp.id_cp,cp.codigoP
-								FROM codigos_postales cp, direcciones d, contactos c
-								WHERE cp.id_cp = d.id_cp
-								 AND d.id_direccion = c.id_direccion
-								 AND c.id_contacto = ".$idContact;
-			$ejecutar1 = mysql_query($consulta1, $this->conexion) or die (mysql_error());
-			$filas1 = mysql_num_rows($ejecutar1);
-			if ($filas1 != 0) {
-				$CodigoPostal = mysql_result($ejecutar1, 0, 'codigoP');
-				$idCp = mysql_result($ejecutar1, 0, 'id_cp');
-			}
-				
-			$consulta2 = "SELECT * FROM codigos_postales WHERE codigoP = ".$CodigoPostal." AND id_cp != ".$idCp." ORDER BY localidad";
-			$ejecutar2 = mysql_query($consulta2, $this->conexion) or die (mysql_error());
-			$filas2 = mysql_num_rows($ejecutar2);
-		
-            if($filas2 != 0){
-            	$codigoPostal= array();
-            	while ($rows = mysql_fetch_assoc($ejecutar2)) {
-					$codigosPostales[] = $rows;
-				}
-            
-		    	return $codigosPostales;
-            }
-		}*/
-
-		/*Funcion para cargar div de los datos del formulario Dirección según el CP ingresado y con los parametros de código postal y llave primaria de la entidad codigos postales*/
-		/*public function obtenerDatosDireccionInsert($CodigoPostal,$idCp)
-		{
-			$consulta = "SELECT * FROM codigos_postales WHERE codigoP = ".$CodigoPostal." AND id_cp != ".$idCp." ORDER BY localidad";
-			$ejecutar = mysql_query($consulta, $this->conexion) or die (mysql_error());
-			$filas = mysql_num_rows($ejecutar);
-		
-            if($filas != 0){
-            	$codigoPostal= array();
-            	while ($rows = mysql_fetch_assoc($ejecutar)) {
-					$codigosPostales[] = $rows;
-				}
-            
-		    	return $codigosPostales;
-            }
-		}
-		
-		public function obtieneNombreLocalidad($idcp)
-    	{
-    		$consulta = "SELECT localidad FROM codigos_postales WHERE id_cp =".$idcp;
-			$ejecutar = mysql_query($consulta)or die ("Error de Consulta obtener localidad".mysql_error());
-			$filas = mysql_num_rows($ejecutar);
-			if ($filas != 0) {
-				$localidad = mysql_result($ejecutar, 0, 'localidad');
-				return $localidad;
-			}
-		}*/
-		
 		//------------------------------------------------------------------CONTACTOS------------------------------------------------------------------------//		
 		public function obtenerContactos(){
 			$consulta = "SELECT 
@@ -265,7 +208,7 @@
 			$skypeCont = mb_strtolower($skypeCont);
 			$dirWebCont = mb_strtolower($dirWebCont);
 			
-			if($nomCont != "" && $apCont != "" && $amCont != "" && $areaCont != "" && $telMovilCont != "" && $telOficinaCont != "" && $telEmergenciaCont != "" && $correoPersonalCont!= ""
+			if($nomCont != "" && $apCont != "" && $amCont != "" && $areaCont != "" && $telMovilCont != "" && $telOficinaCont != "" && $correoPersonalCont!= ""
 					&& $calleCont != "" && $numExtCont != "" && $coloniaCont != ""){
 				//Valdaciones de las cadenas
 			}else{
@@ -275,7 +218,7 @@
 			
 			if($idCP == ""){
 				$band = 1;
-				echo" <script> alert('Seleccione una localidad') </script> ";
+				echo" <script> alert('Obtenga su localidad') </script> ";
 			}
 			
 			if($band == 0){
@@ -391,8 +334,8 @@
 			$skypeCont = mb_strtolower($skypeCont);
 			$dirWebCont = mb_strtolower($dirWebCont);
 			
-			if($nomCont != "" && $apCont != "" && $amCont != "" && $areaCont != "" && $telMovilCont != "" && $extCont != "" && $telOficinaCont != "" && $telEmergenciaCont != ""
-					&& $correoPersonalCont!= "" && $calleCont != "" && $numExtCont != "" && $coloniaCont != ""){
+			if($nomCont != "" && $apCont != "" && $amCont != "" && $areaCont != "" && $telMovilCont != "" && $extCont != "" && $telOficinaCont != "" &&
+					$correoPersonalCont!= "" && $calleCont != "" && $numExtCont != "" && $coloniaCont != ""){
 				//Valdaciones de las cadenas
 			}else{
 				$band = 1;

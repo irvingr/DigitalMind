@@ -1,6 +1,146 @@
 ﻿/*Estilos CSS*/
-h1{color: #28C7E0;-webkit-text-shadow: 0 0 3px #666;-moz-text-shadow: 0 0 3px #666;text-shadow: 0 0 3px #666; font-size:1.3em;}
+h1{color: #28C7E0;-webkit-text-shadow: 0 0 3px #666;-moz-text-shadow: 0 0 3px #666;text-shadow: 0 0 3px #666; font-size:1.5em;font-weight:bold;}
 h2{color: red;-webkit-text-shadow: 0 0 3px #666;-moz-text-shadow: 0 0 3px #666;text-shadow: 0 0 3px #666; font-size:2.0em;}
+
+/*!
+ * Bootstrap v3.3.1 (http://getbootstrap.com)
+ * Copyright 2011-2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+
+
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+
+
+.uno{
+  font-size: 0.862em;
+}
+
+.fondo {
+background-color:#FFFFFF;
+width: 17em;
+margin-right: auto;
+margin-left: auto;
+padding: 6px 0px;
+padding-right: 15px;
+padding-left: 15px;
+text-align: right;
+color:red;
+font-weight: bold;
+font-size:13px;
+text-transform:uppercase;
+
+}
+@media (min-width: 768px) {
+  .fondo {
+    width: 675px; /*750*/
+  }
+}
+
+@media (min-width: 992px) {
+  .fondo {
+    width: 900px; /*970*/
+  }
+}
+@media (min-width: 1200px) {
+  .fondo {
+    width: 898px; /*1717 o 1000*/
+  }
+}
+.fondo-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.rowSam {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #16555B;
+}
+@media (min-width: 768px) {
+  .rowSam {
+    width: 680px; /*750*/
+  }
+}
+@media (min-width: 992px) {
+  .rowSam {
+    width: 900px; /*970*/
+  }
+}
+@media (min-width: 1200px) {
+  .rowSam {
+    width: 930px; /*1717 o 1000*/
+  }
+}
+.rowSam-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+dl {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+dt,
+dd {
+  line-height: 1.9857143;
+  
+}
+dt {
+  font-weight: block;
+  color:#FFFFFF;
+  background-color:  #99CCFF;
+  text-align:justify;
+  text-transform:uppercase;
+  display:block;
+  font-size: 14px;
+  padding:1.5px 0 1.5px 0.5em;
+  text-decoration: none;
+}
+dd {
+  margin-left: 0;
+  background-color:  #E0FFFF;
+}
+@media (min-width: 768px) {
+  .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dl-horizontal dd {
+    margin-left: 180px;
+  }
+}
+
+ul {
+  margin-top: 0;
+  margin-bottom: 3px; 
+}
+
+
+input[type=button], input[type=reset], input[type=submit] {
+  width: auto;
+  height: auto;
+  margin-bottom: .5em;
+}
+
+====
 
 section#contenido, footer{
   margin: 0 auto;

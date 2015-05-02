@@ -72,8 +72,8 @@ p {
 
 
 .btn-primary {
-    border-color: #FF432E;
-    background-color: #FF432E;
+    border-color: #4CB6EA;
+    background-color: #4CB6EA;
     text-transform: uppercase;
     font-weight: 300;
     color: #fff;
@@ -93,7 +93,7 @@ p {
 .btn-primary.active,
 .open .dropdown-toggle.btn-primary {
     color: #fff;
-    border-color: #ea321e;
+    border-color: #4CB6EA;
     background-color: none !important;
 }
 
@@ -112,8 +112,8 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-    border-color: #FF432E;
-    background-color: #FF432E;
+    border-color: #D7D7D7;
+    background-color: #D7D7D7;
 }
 
 
