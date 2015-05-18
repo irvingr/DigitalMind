@@ -47,7 +47,13 @@
 					</tr>
 					<tr>
 						<th>Télefono Emergencia</th>
-						<td><?php echo $detalleContacto['tel_emergencia'] ?></td>
+						<td>
+							<?php if ($detalleContacto['tel_emergencia'] == 0) :?>
+								<?php echo $detalleContacto['tel_emergencia'] = "" ?>
+							<?php  else :?>
+								<?php echo $detalleContacto['tel_emergencia'] ?>
+							<?php endif; ?>
+						</td>
 					</tr>
 					<tr>
 						<th>Correo Institucional</th>
@@ -95,7 +101,7 @@
 							<?php  else :?>
 								<?php echo $detalleContacto['num_int'] ?>
 							<?php endif; ?>
-							</td>
+						</td>
 					</tr>
 					<tr>
 						<th>Colonia</th>

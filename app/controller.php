@@ -33,10 +33,10 @@
 		
 		function recibirEstadoANDMunicipio(){
 			
-			if ($_REQUEST['est'] != "" && $_REQUEST['mun'] != "") {
+			if ($_REQUEST['idEstado'] != "" && $_REQUEST['municipio'] != "") {
 				$obtenerDatosEstaMunci = array(
-					'IDstate' => $_REQUEST['est'],
-					'nameMunicipality' => $_REQUEST['mun'],
+					'IDstate' => $_REQUEST['idEstado'],
+					'nameMunicipality' => $_REQUEST['municipio'],
 				);
 			}
 			
@@ -148,7 +148,7 @@
 			);
 			
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				print_r($_POST);
+				
 				if($_POST['telEmergencia'] == ""){
 					$_POST['telEmergencia'] = 0;
 				}
@@ -246,36 +246,38 @@
 			$detalleContacto = $m->obtenerContacto($IdContacto);
 			
 			$obtenerDatosContacto = $detalleContacto;
-			// var_dump($obtenerDatosContacto);
+			
 			// Obtiene datos de la dirección fisica
 			$obtenerDatosDir = array(
 				'estados' => $m -> obtenerDatosEstadoUpdate($IdContacto),
 				'municipios' => $m -> obtenerDatosMunicipioUpdate($IdContacto),
-				'localidades' => $m -> obtener_direccion_update($IdContacto),
+				// 'localidades' => $m -> obtener_direccion_update($IdContacto),
 			);
-			
-			echo "<br /><br /><br />";
-			// var_dump($obtenerDatosDir['localidades']);
 			
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				
 				if($_POST['telEmergencia'] == ""){
 					$_POST['telEmergencia'] = 0;
 				}
-
 				//Valida si el número interior está vacío le asigna un 0 
 				if($_POST['numInt'] == ""){
 					$_POST['numInt'] = 0;
 				}
-					// Valida si no se recibe la variable le asigna un 0
+				// Valida si no se recibe la variable le asigna un 0
 				if(!isset($_POST['idcp-locality'])){
 					$_POST['idcp-locality'] = 0;
 				}
-					// Valida si se ejecuta la función de actualizarContacto redirecciona a la lista de contactos
+				if(!isset($_POST['loc'])){
+					$_POST['loc'] = "";
+				}
+				if(!isset($_POST['cp'])){
+					$_POST['cp'] = "";
+				}
+				// Valida si se ejecuta la función de actualizarContacto redirecciona a la lista de contactos
 				if($m->actualizarContacto($_POST['idAddress'],$_POST['idcp-locality'],$_POST['street'],$_POST['numExt'],$_POST['numInt'],$_POST['colonia'],$_POST['reference'],
 					$_POST['idContact'],$_POST['nameContact'],$_POST['ApPContact'],$_POST['ApMContact'],$_POST['nameArea'],$_POST['telMovil'],$_POST['whatsappMovil'],
 					$_POST['extC'],$_POST['telOficina'],$_POST['telEmergencia'],$_POST['emailPersonal'],$_POST['emailInstitucional'],$_POST['redSocialF'],$_POST['redSocialT'],
-					$_POST['redSocialS'],$_POST['webPage'],$_POST['activoC'])){
+					$_POST['redSocialS'],$_POST['webPage'])){
 						header('Location: index.php?url=listContact');
 				}else{
 					$obtenerDatosContacto = array(
@@ -295,20 +297,19 @@
 						'twitter' => $_POST['redSocialT'],
 						'skype' => $_POST['redSocialS'],
 						'direccion_web' => $_POST['webPage'],
-						'activo' => $_POST['activoC'],
+						// 'activo' => $_POST['activoC'],
 						'id_direccion' => $_POST['idAddress'],
 						'id_estado' => $_POST['idEstado'],
 						'estadoAfter' => $m -> obtenerNombreEstado($_POST['idEstado']),
 						// Combobox Estados
 						'estados' => $m -> obtenerDatosEstadoInsert($_POST['idEstado']),
+						//
 						'municipioAfter' => $_POST['municipio'],
 						// Combobox Municipios
 						'municipios' => $m -> obtenerDatosMunicipioInsert($_POST['idEstado'], $_POST['municipio']),
-						'localidadAfter' => $_POST['localidad'],
-						//Table Localidades
-						'localidades' => $m -> obtener_direccion($_POST['idEstado'], $_POST['municipio'], $_POST['localidad']),
-						//
 						'id_cp' => $_POST['idcp-locality'],
+						'localidad' => $_POST['loc'],
+						'codigoP' => $_POST['cp'],
 						'calle' => $_POST['street'],
 						'num_ext' => $_POST['numExt'],
 						'num_int' => $_POST['numInt'],

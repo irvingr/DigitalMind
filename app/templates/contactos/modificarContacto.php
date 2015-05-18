@@ -9,6 +9,16 @@
 	 <!-- Style CSS valid & invalid-->
         <link href="<?php echo 'css/'.config::$style_valid_invalid_css ?>" rel="stylesheet" />
 	 		
+	<!-- CSS FancyBox-->
+        <link rel="stylesheet" href="css/fancybox/jquery.fancybox-buttons.css">
+        <link rel="stylesheet" href="css/fancybox/jquery.fancybox.css">
+
+	<!-- Grab Google CDN's jQuery, fall back to local if offline -->
+ 		<script>window.jQuery || document.write('<script src="js/fancybox/libs/jquery-1.7.1.min.js"><\/script>')</script>
+    
+	<!-- FancyBox -->
+		<script src="js/fancybox/jquery.fancybox.js"></script>
+	
 	<div class="rowSam">
 		<h1><br />Editar Contacto</h1>
 		<div class="fondo">&nbsp;* Información requerida</div>
@@ -54,19 +64,19 @@
 							<li><label>Twitter</label><input type="text" name="redSocialT" autocomplete="off" maxlength="20" value="<?php echo $obtenerDatosContacto['twitter'] ?>" />&nbsp;&nbsp;&nbsp;</li>
 							<li><label>Skype</label><input type="text" name="redSocialS"  autocomplete="off" maxlength="20" value="<?php echo $obtenerDatosContacto['skype'] ?>" />&nbsp;&nbsp;&nbsp;</li>
 							<li><label>Página Web</label><input type="url" name="webPage"  autocomplete="off" maxlength="30" placeholder="http://www.ejemplo.com" value="<?php echo $obtenerDatosContacto['direccion_web'] ?>" />&nbsp;&nbsp;&nbsp;</li>
-							<?php if ($obtenerDatosContacto['activo'] == "Si") :?>
-								<li class="li_radio" >
+							<!-- <?php if ($obtenerDatosContacto['activo'] == "Si") :?> -->
+								<!-- <li class="li_radio" >
 									<label>Activo</label>
 									<input type="radio" name="activoC" value="Si" checked  /> Si
 									<input type="radio" name="activoC" value="No" /> No
-								</li>
-							<?php else :?>
-								<li class="li_radio" >
+								</li> -->
+							<!-- <?php else :?> -->
+								<!-- <li class="li_radio" >
 									<label>Activo</label>
 									<input type="radio" name="activoC" value="Si" /> Si
 									<input type="radio" name="activoC" value="No" checked /> No
-								</li>
-							<?php endif; ?>
+								</li> -->
+							<!-- <?php endif; ?> -->
 							<br />
 						</ul>
 					</dd>
@@ -96,7 +106,7 @@
 										<label>Estado</label>
 										<select name="idEstado" id="state" required='required'>
 											<?php if($obtenerDatosContacto['estadoAfter'] == "") :?>
-												<option value="">Seleccione estado</option>
+												<option value="" disabled="disabled">Seleccione estado</option>
 												<?php foreach ($obtenerDatosContacto['id_estado'] as $estado) :?>
 													<option value="<?php echo $estado['id_estado'] ?>"><?php echo $estado['estadoAfter'] ?></option>
 												<?php endforeach; ?>
@@ -115,7 +125,7 @@
 									<li>
 										<label>Municipio</label>
 										<?php if($obtenerDatosContacto['municipio'] != "") :?>
-											<select name="municipio" id="municipio" required='required' disabled="disabled" onchange="ValidarMunicipio();">
+											<select name="municipio" id="municipio" required='required' onchange="ValidarMunicipio();">
 												<option value="<?php echo $obtenerDatosContacto['municipio'] ?>"><?php echo $obtenerDatosContacto['municipio'] ?></option>
 												<?php foreach ($obtenerDatosDir['municipios'] as $nameMunicipality) : ?>
 														<option value="<?php echo $nameMunicipality['municipio'] ?>"> <?php echo $nameMunicipality['municipio'] ?> </option> ?>
@@ -123,6 +133,18 @@
 											</select>
 										<?php endif; ?>
 										<span style="color: red;"><b>*</b></span>
+									</li>
+
+									<li>
+										<?php if($obtenerDatosContacto['municipio'] == "") :?>
+											<a href="#loc" id="segundaPantallaLocalidad" class="fancybox">
+												<input type="button" name="btnGetLocality" value="Obtener Localidad" id="btnLoc" disabled="true" class="btn-primary"/>
+											</a>
+										<?php else :?>
+											<a href="#loc" id="segundaPantallaLocalidad" class="fancybox">
+												<input type="button" name="btnGetLocality" value="Obtener Localidad" id="btnLoc" class="btn-primary"/>
+											</a>
+										<?php endif; ?>
 									</li>
 								<?php else :?>
 									<li>
@@ -132,7 +154,7 @@
 												
 											</select>
 										<?php else :?>
-											<select name="municipio" id="municipio" required='required' disabled="disabled" onchange="ValidarMunicipio();">
+											<select name="municipio" id="municipio" required='required' onchange="ValidarMunicipio();">
 												<option value="<?php echo $obtenerDatosContacto['municipioAfter'] ?>"><?php echo $obtenerDatosContacto['municipioAfter'] ?></option>
 												<?php foreach ($obtenerDatosContacto['municipios'] as $nameMunicipality) : ?>
 														<option value="<?php echo $nameMunicipality['municipio'] ?>"> <?php echo $nameMunicipality['municipio'] ?> </option> ?>
@@ -141,77 +163,39 @@
 										<?php endif; ?>
 										<span style="color: red;"><b>*</b></span>
 									</li>
-								<?php endif; ?>
-								<!--===================== Localidad =====================-->
-								<?php if(!isset($obtenerDatosContacto['localidadAfter'])) :?>
+
 									<li>
-										<label>Localidad</label>
-										<input type="text" name="localidad" id="localidad" required="required" disabled="disabled" autocomplete="off"  maxlength="50" value="<?php echo $obtenerDatosContacto['localidad'] ?>" onkeyup="dirtxtView(this.form)" />
-										<span style="color: red;"><b>&nbsp;*</b></span>
-									</li>
-									<li>
-										<?php if($obtenerDatosContacto['localidad'] != "") :?>
-											<div id="result">
-												<table class="table" id="miTabla">
-													<tr>
-														<th>Estado</th>
-														<th>Municipio</th>
-														<th>Localidad</th>
-														<th>CP</th>
-														<th>Elegir</th>
-													</tr>
-													
-													<?php foreach ($obtenerDatosDir['localidades'] as $Dir) : ?>
-														<tr>
-															<td><?php echo $Dir['estado'] ?></td>
-															<td><?php echo $Dir['municipio'] ?></td>
-															<td><?php echo $Dir['localidad'] ?></td>
-															<td><?php echo $Dir['codigoP'] ?></td>
-															<td><input type="radio" name="idcp-locality" checked="checked" value="<?php echo $Dir['id_cp'] ?>"/></td>
-														</tr>
-													<?php endforeach; ?>
-												</table>
-											</div>
-										<?php endif; ?>
-									</li>
-								<?php else :?>
-								<li>
-									<label>Localidad</label>
-									<input type="text" name="localidad" id="localidad" required="required" disabled="disabled" autocomplete="off"  maxlength="50" value="<?php echo $obtenerDatosContacto['localidadAfter'] ?>" onkeyup="dirtxtView(this.form)" />
-									<span style="color: red;"><b>&nbsp;*</b></span>
-								</li>
-								<li>
-									<div id="result">
-										<?php if($obtenerDatosContacto['localidades'] == NULL) :?>
-											<pre><center><table><tr><td><span class="span">Ingresa una localidad valida</span></td></tr></table></center></pre>
+										<?php if($obtenerDatosContacto['municipioAfter'] == "") :?>
+											<a href="#loc" id="segundaPantallaLocalidad" class="fancybox">
+												<input type="button" name="btnGetLocality" value="Obtener Localidad" id="btnLoc" disabled="true" class="btn-primary"/>
+											</a>
 										<?php else :?>
-											<table class="table" id="miTabla">
-												<tr>
-													<th>Estado</th>
-													<th>Municipio</th>
-													<th>Localidad</th>
-													<th>CP</th>
-													<th>Elegir</th>
-												</tr>
-												
-												<?php foreach ($obtenerDatosContacto['localidades'] as $Dir) : ?>
-													<tr>
-														<td><?php echo $Dir['estado'] ?></td>
-														<td><?php echo $Dir['municipio'] ?></td>
-														<td><?php echo $Dir['localidad'] ?></td>
-														<td><?php echo $Dir['codigoP'] ?></td>
-														<?php if($Dir['id_cp'] == $obtenerDatosContacto['id_cp']) :?>
-															<td><input type="radio" name="idcp-locality" checked="checked" value="<?php echo $Dir['id_cp'] ?>"/></td>
-														<?php else :?>
-															<td><input type="radio" name="idcp-locality" value="<?php echo $Dir['id_cp'] ?>"/></td>
-														<?php endif; ?>
-													</tr>
-												<?php endforeach; ?>
-											</table>
+											<a href="#loc" id="segundaPantallaLocalidad" class="fancybox">
+												<input type="button" name="btnGetLocality" value="Obtener Localidad" id="btnLoc" class="btn-primary"/>
+											</a>
 										<?php endif; ?>
-									</div>
-								</li>
-							<?php endif ?>
+									</li>
+								<?php endif; ?>
+								
+								<div id="datosLoc">
+									<?php if(isset($obtenerDatosContacto['id_cp'])) :?>
+										<?php if($obtenerDatosContacto['id_cp'] != 0) :?>							
+											
+												<li>
+													<!-- IdCodigoPostal --><input type="hidden" name="idcp-locality" id="icp" readonly="readonly" value="<?php echo $obtenerDatosContacto['id_cp'] ?>"/>
+												</li>
+												<li>
+													<label>Localidad</label><input type="text" name="loc" id="locEvent" readonly="readonly" class="desabilitar" value="<?php echo $obtenerDatosContacto['localidad'] ?>"/>
+													&nbsp;&nbsp;&nbsp;
+												</li>
+												<li>
+													<label>Código Postal</label><input type="text" name="cp" id="cpEvent" readonly="readonly" class="desabilitar" value="<?php echo $obtenerDatosContacto['codigoP'] ?>"/>
+													&nbsp;&nbsp;&nbsp;
+												</li>
+											
+										<?php endif; ?>
+									<?php endif; ?>
+								</div>
 							<li><label>Calle</label><input type="text" name="street" autocomplete="off" required="required" maxlength="50" value="<?php echo $obtenerDatosContacto['calle'] ?>" onChange="conMayusculas(this)" /><span style="color: red;"><b>&nbsp;*</b></span></li>
 							<li><label>Número Exterior</label><input type="text" class="keysNumbers" name="numExt" autocomplete="off" required="required" maxlength="5" value="<?php echo $obtenerDatosContacto['num_ext'] ?>"  /><span style="color: red;"><b>&nbsp;*</b></span></li>
 							<?php if($obtenerDatosContacto['num_int'] != 0) :?>
@@ -235,80 +219,87 @@
 				</a>
 									
 			</form>
+			
+			<!--  ventana emergente-->
+			<div style="display: none;">
+				<div id="loc" style="width:900px; height:500px; overflow:hidden;">
+					
+				</div>
+			</div>
 		</div>
 	</div>
 					
 	<script type="text/javascript">
+		var int = jQuery.noConflict();
 		
 		<!--Script listas desplegables-->
-		$(document).ready(function(){
-		   $("dd").hide();
-			$("dt").css({
+		
+		int(document).ready(function(){
+		   int("dd").hide();
+			int("dt").css({
 			'cursor':'pointer'});
-			$("dt").click(function(event){
-				var desplegable = $(this).next();
-				$('dd').not(desplegable).slideUp('fast');
+			int("dt").click(function(event){
+				var desplegable = int(this).next();
+				int('dd').not(desplegable).slideUp('fast');
 				desplegable.slideToggle('fast');
 				event.preventDefault();
+				int("#nomCont").focus();
 			})
 		});
 		
-		$(function () {
-		    $('#state').change(function (a) {
-		        if ($(this).val() != "") {
-		            $('#municipio').removeAttr('disabled');
-		            $('#municipio').load('index.php?url=viewMunicipality&state=' + this.options[this.selectedIndex].value );
-		            if($('#municipio').val("")){
-		            	$('#localidad').attr('disabled','disabled').val("");
-		        		$("#result").css("display", "none");
-		       		}
-		        }
-		        else {
-		            $('#municipio').attr('disabled','disabled').val("");
-		            $('#localidad').attr('disabled','disabled').val("");
-		            $("#result").css("display", "none");
-		        }
-		    });
+		int(document).ready(function() {
+		    int('.keysNumbers').keypress(function(tecla) {
+		       if(tecla.charCode < 48 || tecla.charCode > 57) return false;
+		   });
+		});
 		
-		    if ($('#state option:selected').val() != "") {
-		        $('#municipio').removeAttr('disabled');
-		        $('#localidad').removeAttr('disabled');
-		    }
+		function conMayusculas(field) {
+			field.value = field.value.toUpperCase()
+		}
+		
+		int(function () {
+		    int('#state').change(function () {
+		        if (int(this).val() != "") {
+		            int('#municipio').removeAttr('disabled');
+		            int('#municipio').load('index.php?url=viewMunicipality&state=' + this.options[this.selectedIndex].value);
+		            if(int('#municipio').val("")){
+		        		int("#btnLoc").attr('disabled','disabled');
+		       		}
+		        }else {
+		            int('#municipio').attr('disabled','disabled').val("");
+		            int("#btnLoc").attr('disabled','disabled');
+		        }
+		        int("#datosLoc").css("display", "none");
+		        int("#icp").val("");
+		        int("#locEvent").val("");
+		        int("#cpEvent").val("");
+		    });
 		});
 		
 		function ValidarMunicipio() {
-		    if ($('#municipio').val() != "") {
-		    	$('#localidad').removeAttr('disabled');
-		        if($('#localidad').val("")){
-		        	$('#localidad').focus();
-		        	$("#result").css("display", "none");
-		        }
+		    if (int('#municipio').val() != "") {
+		    	int("#btnLoc").removeAttr('disabled');
 		    }
 		    else {
-		        $('#municipio').removeAttr('disabled');
-		        $('#localidad').attr('disabled','disabled').val("");
-		        $("#result").css("display", "none");
+		        int('#municipio').removeAttr('disabled');
+		        int("#datosLoc").css("display", "none");
+		        int("#btnLoc").attr('disabled','disabled');
 		    }
+		   int("#datosLoc").css("display", "none");
+		   int("#icp").val("");
+		   int("#locEvent").val("");
+		   int("#cpEvent").val("");
 		}
 		
-		function dirtxtView(form){
-			if($('#localidad').val() != ""){
-				$("#result").css("display", "block");
-				$('#result').load('index.php?url=viewDirLocality&idEstado=&municipio=&localidad=' + $('#formContact').serialize())	
-			}else{
-				$("#result").css("display", "none");
-			}
-		}
-		
-		jQuery(document).ready(function() {
-		    jQuery('.keysNumbers').keypress(function(tecla) {
-		        if(tecla.charCode < 48 || tecla.charCode > 57) return false;
-		    });
+		int(function () {
+			int("#btnLoc").click(
+				function () {
+					formContact = this.form;
+					int("#segundaPantallaLocalidad").fancybox();
+					int('#loc').load('index.php?url=enviarEstadMunici&',int(formContact).serialize());
+				}
+			);
 		});
-		
-	    function conMayusculas(field) {
-	            field.value = field.value.toUpperCase()
-		}
 	</script>
 	
 <?php $contenido = ob_get_clean() ?>

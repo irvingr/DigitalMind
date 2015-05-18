@@ -26,11 +26,9 @@
 	     'enviarEstadMunici' => array('controller' =>'Controller', 'action' =>'recibirEstadoANDMunicipio'),
 	     'viewDirLocality' => array('controller' =>'Controller', 'action' =>'obtenerDireccionLocalidad'),
 	     'enviarLocality' => array('controller' =>'Controller', 'action' =>'recibirLocalidad'),
-	     // 'obtenerDir' => array('controller' =>'Controller', 'action' =>'obtenerDireccion'),
 	     'searchContact' => array('controller' =>'Controller', 'action' =>'buscarContacto'),
 	     'updateContact' => array('controller' =>'Controller', 'action' =>'modificarContacto'),
 	     'deletedContact' => array('controller' =>'Controller', 'action' =>'eliminarContacto'),
-	     
 	     //-------------------------CLIENTES-------------------------------------------
 	     'listaCliente' => array('controller' =>'Controller', 'action' =>'listaCliente'), 
      	 'verCliente' => array('controller' =>'Controller', 'action' =>'verCliente') ,

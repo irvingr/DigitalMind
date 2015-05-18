@@ -313,7 +313,7 @@
 		
 		public function actualizarContacto($idDireccion,$idCP,$calleCont,$numExtCont,$numIntCont,$coloniaCont,$referenciaCont,
 		$idCont,$nomCont,$apCont,$amCont,$areaCont,$telMovilCont,$whatsAppCont,$extCont,$telOficinaCont,$telEmergenciaCont,$correoPersonalCont,
-		$correoInstituCont,$facebookCont,$twitterCont,$skypeCont,$dirWebCont,$activoCont)
+		$correoInstituCont,$facebookCont,$twitterCont,$skypeCont,$dirWebCont)
 		{
 			$band = 0;
 			
@@ -344,7 +344,7 @@
 			
 			if($idCP == 0){
 				$band = 1;
-				echo" <script> alert('Seleccione una localidad') </script> ";
+				echo" <script> alert('Obtenga su localidad') </script> ";
 			}
 			
 			if($band == 0){
@@ -374,7 +374,7 @@
 				$consulta2 = "UPDATE contactos
 									SET nombreCon = '".$nomCont."',ap_paterno = '".$apCont."',ap_materno = '".$amCont."',nombre_area = '".$areaCont."',movil = ".$telMovilCont.",whatsapp = '".$whatsAppCont."',
 									extension = ".$extCont.",tel_oficina = ".$telOficinaCont.",tel_emergencia = ".$telEmergenciaCont.",correo_p = '".$correoPersonalCont."',correo_instu = '".$correoInstituCont."',
-									facebook = '".$facebookCont."',twitter = '".$twitterCont."',skype = '".$skypeCont."',direccion_web = '".$dirWebCont."',activo = '".$activoCont."'
+									facebook = '".$facebookCont."',twitter = '".$twitterCont."',skype = '".$skypeCont."',direccion_web = '".$dirWebCont."'
 									WHERE id_contacto = ".$idCont;
 				$ejecutar2 = mysql_query($consulta2,$this->conexion) or die ("Error en actualizar contacto ".mysql_error());	
 				
@@ -451,7 +451,7 @@
             }
 		}		
 		
-		public function obtener_direccion_update($IdContacto){
+		/*public function obtener_direccion_update($IdContacto){
 			$consulta1 = "SELECT 
 						  e.id_estado,
 						  cp.municipio,
@@ -487,7 +487,7 @@
 			}
 			
 			return $direccion;
-		}
+		}*/
 		
 		public function borrarContacto($idCont){
 			$consulta1 = "SELECT cc.id_contacto
@@ -513,10 +513,6 @@
 					$cunsultaActualiza = "UPDATE contactos SET activo = 'No' WHERE id_contacto = ".$idCont;
 					$ejecutarActualiza = mysql_query($cunsultaActualiza,$this->conexion) or die (mysql_error());
 					echo" <script> alert('El registro no puede ser eliminado, solo se desactivo') 
-								window.location='index.php?url=listContact';
-						 	</script> ";
-				}else{
-					echo" <script> alert('El registro ya esta desactivado') 
 								window.location='index.php?url=listContact';
 						 	</script> ";
 				}
